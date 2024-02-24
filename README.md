@@ -1,27 +1,29 @@
-# CreditCalculatorNumber2Angular
+Angular CLI version 17.2.0.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
+Для запуску проекта на локалці, завантажуєте його (гілку master) і силка: https://github.com/YaroslavKS/Credit_Calculator_Number_2_Angular, встановлюєте всі залежності і потім пишете "ng serve" і проект запущено, або користуйтеся GitHubPages (https://github.com/YaroslavKS/Angular_Credit_App) і сама силка: https://yaroslavks.github.io/Angular_Credit_App/.
 
-## Development server
+Що було зроблено:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Використання Angular та Bootstrap: Для розробки проекту було використано Angular версії 15+ та Bootstrap. Для віджетів використано NG Bootstrap.
 
-## Code scaffolding
+Маніпуляції з даними за допомогою RxJS: Усі маніпуляції з даними, такі як отримання, фільтрування та обчислення метрик, виконуються з використанням операторів RxJS.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Використання Angular Router: Перехід між сторінками відбувається з використанням Angular Router.
 
-## Build
+Адаптивний дизайн та стилізація з Bootstrap: Сторінки проєкту мають адаптивний дизайн та використовують стилі Bootstrap. Кастомні стилі також додано для покращення зовнішнього вигляду.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Застосування загальноприйнятих практик розробки: Код написаний з урахуванням загальноприйнятих практик та стандартів розробки.
 
-## Running unit tests
+GitHub репозиторій з README-файлом: Весь код проєкту залитий на GitHub та має README-файл з описом запуску проєкту та описом виконаного завдання.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Вимоги до виконання завдання також були виконані:
 
-## Running end-to-end tests
+Створення панелі навігації: Додано панель навігації з двома посиланнями: "Загальна таблиця" та "Коротка інформація".
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Таблиця для відображення даних: Для сторінки "Загальна таблиця" створена таблиця для відображення даних, які завантажуються з кінцевої точки API за посиланням https://raw.githubusercontent.com/LightOfTheSun/front-end-coding-task-db/master/db.json.
 
-## Further help
+Додавання фільтрів: На сторінку "Загальна таблиця" додані фільтри, які впливають на дані у таблиці. Для маніпуляції даними використовані оператори RxJS, як вимагалося.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Панель з метриками: Для сторінки "Коротка інформація" створена панель, що містить наступні метрики, які використовують дані з тієї ж кінцевої точки API.
+
+Всі вимоги до проєкту були успішно виконані.
