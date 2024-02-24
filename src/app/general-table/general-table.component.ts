@@ -50,6 +50,7 @@ export class GeneralTableComponent implements OnInit {
       let passIssuanceDateFilter = true;
       let passReturnDateFilter = true;
       let passActualReturnDateFilter = true;
+      let passOverdueFilter = true;
   
       if (this.issuanceDate) {
         passIssuanceDateFilter = user.issuance_date === this.issuanceDate;
@@ -60,10 +61,16 @@ export class GeneralTableComponent implements OnInit {
       if (this.actualReturnDate) {
         passActualReturnDateFilter = user.actual_return_date === this.actualReturnDate;
       }
+      if (user.actual_return_date && user.return_date) {
+        passOverdueFilter = new Date(user.actual_return_date) > new Date(user.return_date);
+      } else if (user.return_date) {
+        passOverdueFilter = new Date(user.return_date) < new Date();
+      }
   
-      return passIssuanceDateFilter && passReturnDateFilter && passActualReturnDateFilter;
+      return passIssuanceDateFilter && passReturnDateFilter && passActualReturnDateFilter && passOverdueFilter;
     });
   }
+  
   
   
 }

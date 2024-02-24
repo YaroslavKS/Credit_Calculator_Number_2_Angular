@@ -1,12 +1,18 @@
-<div class="card">
-    <div class="card-body">
-      <!-- <h5 class="card-title">{{ data.user }}</h5>
-      <p class="card-text">ID: {{ data.id }}</p>
-      <p class="card-text">Issuance Date: {{ data.issuance_date }}</p>
-      <p class="card-text">Return Date: {{ data.return_date }}</p>
-      <p class="card-text">Actual Return Date: {{ data.actual_return_date }}</p>
-      <p class="card-text">Body: {{ data.body }}</p>
-      <p class="card-text">Percent: {{ data.percent }}</p> -->
+<div class="panel panel-default">
+  <div class="panel-heading bg-primary text-white">Metrics</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6" *ngFor="let month of monthlyCredits">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h4 class="card-title" (click)="sortData('month')">Month: {{ month.month }}</h4>
+            <p class="card-text" (click)="sortData('totalIssuedCredits')">Total Issued Credits: {{ month.totalIssuedCredits }}</p>
+            <p class="card-text" (click)="sortData('averageIssuedCredits')">Average Issued Credits: {{ month.averageIssuedCredits }}</p>
+            <p class="card-text" (click)="sortData('totalIssuedInterest')">Total Issued Interest: {{ month.totalIssuedInterest }}</p>
+            <p class="card-text" (click)="sortData('totalReturnedCredits')">Total Returned Credits: {{ month.totalReturnedCredits }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
+</div>
