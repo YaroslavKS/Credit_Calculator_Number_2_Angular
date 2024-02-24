@@ -1,0 +1,33 @@
+.navbar {
+  background-color: #f8f9fa; 
+  border-bottom: 1px solid #dee2e6; 
+  padding: 10px 20px; 
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 20px; 
+}
+
+.nav-link {
+  color: #343a40; 
+}
+
+.nav-link:hover {
+  color: #555; 
+}
+
+.navbar-nav .active .nav-link {
+  color: #007bff;
+}
+
+.navbar-collapse {
+  justify-content: center;
+}
+
+.navbar-toggler {
+  border-color: #dee2e6;
+}

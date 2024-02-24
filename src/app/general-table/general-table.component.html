@@ -1,0 +1,39 @@
+<div class="row mb-3">
+  <div class="col-md-4">
+    <label for="issuanceDateFilter" class="form-label">Issuance Date:</label>
+    <input type="date" class="form-control" id="issuanceDateFilter" (change)="applyFilters()" [(ngModel)]="issuanceDate">
+  </div>
+  <div class="col-md-4">
+    <label for="returnDateFilter" class="form-label">Return Date:</label>
+    <input type="date" class="form-control" id="returnDateFilter" (change)="applyFilters()" [(ngModel)]="returnDate">
+  </div>
+  <div class="col-md-4">
+    <label for="actualReturnDateFilter" class="form-label">Actual Return Date:</label>
+    <input type="date" class="form-control" id="actualReturnDateFilter" (change)="applyFilters()" [(ngModel)]="actualReturnDate">
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Issuance Date</th>
+      <th>Return Date</th>
+      <th>Actual Return Date</th>
+      <th>Body</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of filteredUsers">
+      <td>{{ user.id }}</td>
+      <td>{{ user.user }}</td>
+      <td>{{ user.issuance_date }}</td>
+      <td>{{ user.return_date }}</td>
+      <td>{{ user.actual_return_date }}</td>
+      <td>{{ user.body }}</td>
+      <td>{{ user.percent }}</td>
+    </tr>
+  </tbody>
+</table>
