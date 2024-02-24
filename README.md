@@ -1,6 +1,6 @@
 Angular CLI version 17.2.0.
 
-Для запуску проекта на локалці, завантажуєте його (гілку master), встановлюєте всі залежності і потім пишете "ng serve" і проект запущено, або користуйтеся GitHubPages (гілка gh-pages).
+Для запуску проекта на локалці, завантажуєте його (гілку master), встановлюєте всі залежності і потім пишете "ng serve" і проект запущено, або користуйтеся GitHubPages (https://github.com/YaroslavKS/Angular_Credit_App) і сама силка: https://yaroslavks.github.io/Angular_Credit_App/.
 
 Що було зроблено:
 
