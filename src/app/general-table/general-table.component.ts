@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../model/user.model';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-general-table',
@@ -13,31 +15,29 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './general-table.component.scss'
 })
 export class GeneralTableComponent implements OnInit {
-  issuanceDate: string = '';
-  returnDate: string = '';
-  actualReturnDate: string = '';
-  users: any[] = [];
-  filteredUsers: any[] = [];
+  issuanceStartDate: string = '';
+  issuanceEndDate: string = '';
+  returnStartDate: string = '';
+  returnEndDate: string = '';
+  actualReturnStartDate: string = '';
+  actualReturnEndDate: string = '';
+  includeOverdue: boolean = false; // Опціональний фільтр для просрочених кредитів
+
+  users: User[] = [];
+  filteredUsers: User[] = [];
 
   private onDestroy$: Subject<void> = new Subject<void>();
-  issuanceDateFilter: Subject<any> = new Subject<any>();
-  returnDateFilter: Subject<any> = new Subject<any>();
-  overdueFilter: Subject<any> = new Subject<any>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private dataService: DataService) { }
 
   ngOnInit() {
-    this.http.get<any[]>('https://raw.githubusercontent.com/LightOfTheSun/front-end-coding-task-db/master/db.json')
+    this.dataService.getUsers()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe(users => {
+      .subscribe((users: User[]) => {
         this.users = users;
         this.filteredUsers = users;
         this.applyFilters();
       });
-
-    this.issuanceDateFilter.pipe(takeUntil(this.onDestroy$)).subscribe(() => this.applyFilters());
-    this.returnDateFilter.pipe(takeUntil(this.onDestroy$)).subscribe(() => this.applyFilters());
-    this.overdueFilter.pipe(takeUntil(this.onDestroy$)).subscribe(() => this.applyFilters());
   }
 
   ngOnDestroy() {
@@ -46,31 +46,33 @@ export class GeneralTableComponent implements OnInit {
   }
 
   applyFilters() {
-    this.filteredUsers = this.users.filter(user => {
+    this.filteredUsers = this.users.filter((user: User) => {
       let passIssuanceDateFilter = true;
       let passReturnDateFilter = true;
       let passActualReturnDateFilter = true;
       let passOverdueFilter = true;
-  
-      if (this.issuanceDate) {
-        passIssuanceDateFilter = user.issuance_date === this.issuanceDate;
+
+      // Фільтр за періодом видачі кредиту
+      if (this.issuanceStartDate && this.issuanceEndDate) {
+        passIssuanceDateFilter = user.issuance_date >= this.issuanceStartDate && user.issuance_date <= this.issuanceEndDate;
       }
-      if (this.returnDate) {
-        passReturnDateFilter = user.return_date === this.returnDate;
+
+      // Фільтр за періодом повернення кредиту
+      if (this.returnStartDate && this.returnEndDate) {
+        passReturnDateFilter = user.return_date >= this.returnStartDate && user.return_date <= this.returnEndDate;
       }
-      if (this.actualReturnDate) {
-        passActualReturnDateFilter = user.actual_return_date === this.actualReturnDate;
+
+      // Фільтр за періодом фактичного повернення кредиту
+      if (this.actualReturnStartDate && this.actualReturnEndDate) {
+        passActualReturnDateFilter = user.actual_return_date >= this.actualReturnStartDate && user.actual_return_date <= this.actualReturnEndDate;
       }
-      if (user.actual_return_date && user.return_date) {
+
+      // Опціональний фільтр для просрочених кредитів
+      if (this.includeOverdue && user.actual_return_date && user.return_date) {
         passOverdueFilter = new Date(user.actual_return_date) > new Date(user.return_date);
-      } else if (user.return_date) {
-        passOverdueFilter = new Date(user.return_date) < new Date();
       }
-  
+
       return passIssuanceDateFilter && passReturnDateFilter && passActualReturnDateFilter && passOverdueFilter;
     });
   }
-  
-  
-  
 }

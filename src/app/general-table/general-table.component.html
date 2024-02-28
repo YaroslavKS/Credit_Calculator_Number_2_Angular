@@ -2,16 +2,32 @@
   <div class="container">
     <div class="form-row">
       <div class="form-group col-md-4">
-        <label for="issuanceDate">Filter by Issuance Date:</label>
-        <input type="date" class="form-control" id="issuanceDate" [(ngModel)]="issuanceDate" (input)="applyFilters()">
+        <label for="issuanceStartDate">Filter by Issuance Start Date:</label>
+        <input type="date" class="form-control" id="issuanceStartDate" [(ngModel)]="issuanceStartDate" (input)="applyFilters()">
       </div>
       <div class="form-group col-md-4">
-        <label for="returnDate">Filter by Return Date:</label>
-        <input type="date" class="form-control" id="returnDate" [(ngModel)]="returnDate" (input)="applyFilters()">
+        <label for="issuanceEndDate">Filter by Issuance End Date:</label>
+        <input type="date" class="form-control" id="issuanceEndDate" [(ngModel)]="issuanceEndDate" (input)="applyFilters()">
       </div>
       <div class="form-group col-md-4">
-        <label for="actualReturnDate">Filter by Actual Return Date:</label>
-        <input type="date" class="form-control" id="actualReturnDate" [(ngModel)]="actualReturnDate" (input)="applyFilters()">
+        <label for="returnStartDate">Filter by Return Start Date:</label>
+        <input type="date" class="form-control" id="returnStartDate" [(ngModel)]="returnStartDate" (input)="applyFilters()">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="returnEndDate">Filter by Return End Date:</label>
+        <input type="date" class="form-control" id="returnEndDate" [(ngModel)]="returnEndDate" (input)="applyFilters()">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="actualReturnStartDate">Filter by Actual Return Start Date:</label>
+        <input type="date" class="form-control" id="actualReturnStartDate" [(ngModel)]="actualReturnStartDate" (input)="applyFilters()">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="actualReturnEndDate">Filter by Actual Return End Date:</label>
+        <input type="date" class="form-control" id="actualReturnEndDate" [(ngModel)]="actualReturnEndDate" (input)="applyFilters()">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="includeOverdue">Include Overdue:</label>
+        <input type="checkbox" class="form-control" id="includeOverdue" [(ngModel)]="includeOverdue" (change)="applyFilters()">
       </div>
     </div>
   </div>
