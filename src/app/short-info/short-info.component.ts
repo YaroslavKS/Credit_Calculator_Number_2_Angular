@@ -3,6 +3,7 @@ import { DataService } from '../services/data.service';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '../model/user.model';
 import { Subject } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 interface MonthlyCredit {
   month: string;
@@ -17,14 +18,15 @@ interface MonthlyCredit {
 @Component({
   selector: 'app-short-info',
   templateUrl: './short-info.component.html',
-  styleUrls: ['./short-info.component.scss']
+  styleUrls: ['./short-info.component.scss'],
+  providers: [DatePipe]
 })
 export class ShortInfoComponent implements OnInit, OnDestroy {
   monthlyCredits: MonthlyCredit[] = [];
   private onDestroy$: Subject<void> = new Subject<void>();
   users: User[] = [];
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getData();
