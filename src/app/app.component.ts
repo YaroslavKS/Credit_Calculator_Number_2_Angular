@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from './navigation/navigation.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { DataService } from './services/data.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent, HttpClientModule, FormsModule],
+  imports: [RouterOutlet, NavigationComponent, HttpClientModule ,FormsModule, DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

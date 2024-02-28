@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DataService } from '../services/data.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 interface MonthlyCredit {
-  [key: string]: any;
-  month: number;
+  month: string;
   totalIssuedCredits: number;
   averageIssuedCredits: number;
-  totalIssuedInterest: number;
+  totalIssuedAmount: number;
+  totalInterestAccrued: number;
   totalReturnedCredits: number;
+  [key: string]: string | number;
 }
 
 @Component({
@@ -18,107 +18,68 @@ interface MonthlyCredit {
   templateUrl: './short-info.component.html',
   styleUrls: ['./short-info.component.scss']
 })
-export class ShortInfoComponent implements OnInit {
-  credits: any[] = [];
+export class ShortInfoComponent implements OnInit, OnDestroy {
   monthlyCredits: MonthlyCredit[] = [];
-  totalIssuedCredits: number = 0;
-  totalIssuedInterest: number = 0;
-  totalReturnedCredits: number = 0;
-  returnedCreditsByMonth: { [key: string]: number } = {};
-  sortBy: string = 'month';
-  sortDirection: number = 1;
   private onDestroy$: Subject<void> = new Subject<void>();
 
-  constructor(private http: HttpClient, private datePipe: DatePipe) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.http.get<any[]>('https://raw.githubusercontent.com/LightOfTheSun/front-end-coding-task-db/master/db.json')
+    this.getData();
+  }
+
+  getData(): void {
+    this.dataService.getUsers()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe(credits => {
-        this.credits = credits;
-        this.calculateMetrics();
-        this.calculateReturnedCreditsByMonth();
+      .subscribe((users: any[]) => {
+        this.monthlyCredits = this.calculateMetrics(users);
       });
+  }
+
+  sortData(property: string): void {
+    if (property === 'month') {
+      this.monthlyCredits.sort((a, b) => {
+        const monthA = new Date(a.month).getTime();
+        const monthB = new Date(b.month).getTime();
+        return monthA - monthB;
+      });
+    } else {
+      this.monthlyCredits.sort((a, b) => {
+        return Number(a[property]) - Number(b[property]);
+      });
+    }
+  }
+
+  calculateMetrics(users: any[]): MonthlyCredit[] {
+    const monthsData: { [key: string]: MonthlyCredit } = {};
+
+    users.forEach(user => {
+      const issuanceDate = new Date(user.issuance_date);
+      const monthKey = `${issuanceDate.getMonth() + 1}-${issuanceDate.getFullYear()}`;
+      const month = `${issuanceDate.toLocaleString('default', { month: 'long' })} ${issuanceDate.getFullYear()}`;
+      if (!monthsData[monthKey]) {
+        monthsData[monthKey] = {
+          month: month,
+          totalIssuedCredits: 0,
+          averageIssuedCredits: 0,
+          totalIssuedAmount: 0,
+          totalInterestAccrued: 0,
+          totalReturnedCredits: 0
+        };
+      }
+      monthsData[monthKey].totalIssuedCredits++;
+      monthsData[monthKey].totalIssuedAmount += user.body;
+      monthsData[monthKey].totalInterestAccrued += user.percent;
+      if (user.actual_return_date) {
+        monthsData[monthKey].totalReturnedCredits++;
+      }
+    });
+
+    return Object.values(monthsData);
   }
 
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
-  }
-
-  calculateMetrics(): void {
-    const monthsData: { [key: number]: MonthlyCredit } = {};
-
-    this.credits.forEach(credit => {
-      const month = new Date(credit.issuance_date).getMonth();
-      if (!monthsData[month]) {
-        monthsData[month] = {
-          month: month,
-          totalIssuedCredits: 0,
-          averageIssuedCredits: 0,
-          totalIssuedInterest: 0,
-          totalReturnedCredits: 0
-        };
-      }
-      monthsData[month].totalIssuedCredits += credit.body;
-      monthsData[month].totalIssuedInterest += credit.percent;
-      if (credit.actual_return_date) {
-        monthsData[month].totalReturnedCredits++;
-      }
-      this.totalIssuedCredits += credit.body;
-      this.totalIssuedInterest += credit.percent;
-      if (credit.actual_return_date) {
-        this.totalReturnedCredits++;
-      }
-    });
-
-    for (const key in monthsData) {
-      if (monthsData.hasOwnProperty(key)) {
-        const monthData = monthsData[key];
-        monthData.averageIssuedCredits = monthData.totalIssuedCredits / Object.keys(monthsData).length;
-        this.monthlyCredits.push(monthData);
-      }
-    }
-  }
-
-  calculateReturnedCreditsByMonth(): void {
-    this.returnedCreditsByMonth = {};
-
-    this.credits.forEach(credit => {
-      const issuanceDate = new Date(credit.issuance_date);
-      const actualReturnDate = new Date(credit.actual_return_date);
-
-      const issuanceMonth = issuanceDate.getMonth() + 1;
-      const issuanceYear = issuanceDate.getFullYear();
-      const key = `${issuanceMonth}-${issuanceYear}`;
-
-      if (!this.returnedCreditsByMonth[key]) {
-        this.returnedCreditsByMonth[key] = 0;
-      }
-
-      if (actualReturnDate && actualReturnDate >= issuanceDate &&
-        actualReturnDate.getMonth() === issuanceDate.getMonth() &&
-        actualReturnDate.getFullYear() === issuanceDate.getFullYear()) {
-        this.returnedCreditsByMonth[key]++;
-      }
-    });
-  }
-
-  sortData(property: string): void {
-    if (this.sortBy === property) {
-      this.sortDirection = -this.sortDirection; // зміна напрямку сортування при повторному кліку
-    } else {
-      this.sortBy = property;
-      this.sortDirection = 1;
-    }
-    this.monthlyCredits.sort((a, b) => {
-      if (a[property] < b[property]) {
-        return -1 * this.sortDirection;
-      } else if (a[property] > b[property]) {
-        return 1 * this.sortDirection;
-      } else {
-        return 0;
-      }
-    });
   }
 }

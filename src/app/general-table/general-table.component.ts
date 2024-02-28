@@ -31,13 +31,17 @@ export class GeneralTableComponent implements OnInit {
   constructor(private http: HttpClient, private dataService: DataService) { }
 
   ngOnInit() {
+    this.getData()
+  }
+
+  getData(){
     this.dataService.getUsers()
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((users: User[]) => {
-        this.users = users;
-        this.filteredUsers = users;
-        this.applyFilters();
-      });
+    .pipe(takeUntil(this.onDestroy$))
+    .subscribe((users: User[]) => {
+      this.users = users;
+      this.filteredUsers = users;
+      this.applyFilters();
+    });
   }
 
   ngOnDestroy() {
