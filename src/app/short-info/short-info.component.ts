@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { takeUntil } from 'rxjs/operators';
+import { User } from '../model/user.model';
 import { Subject } from 'rxjs';
 
 interface MonthlyCredit {
@@ -21,6 +22,7 @@ interface MonthlyCredit {
 export class ShortInfoComponent implements OnInit, OnDestroy {
   monthlyCredits: MonthlyCredit[] = [];
   private onDestroy$: Subject<void> = new Subject<void>();
+  users: User[] = [];
 
   constructor(private dataService: DataService) { }
 
@@ -31,10 +33,15 @@ export class ShortInfoComponent implements OnInit, OnDestroy {
   getData(): void {
     this.dataService.getUsers()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe((users: any[]) => {
-        this.monthlyCredits = this.calculateMetrics(users);
+      .subscribe((users: User[]) => {
+        // Отримання даних користувачів
+        this.users = users;
+  
+        // Розрахунок метрик за користувачів
+        this.monthlyCredits = this.calculateMetrics(users); // Передаємо users у метод calculateMetrics
       });
   }
+  
 
   sortData(property: string): void {
     if (property === 'month') {
@@ -43,16 +50,16 @@ export class ShortInfoComponent implements OnInit, OnDestroy {
         const monthB = new Date(b.month).getTime();
         return monthA - monthB;
       });
-    } else {
-      this.monthlyCredits.sort((a, b) => {
-        return Number(a[property]) - Number(b[property]);
-      });
+     } else {
+       this.monthlyCredits.sort((a, b) => {
+         return Number(a[property]) - Number(b[property]);
+     });
     }
   }
 
-  calculateMetrics(users: any[]): MonthlyCredit[] {
+  calculateMetrics(users: User[]): MonthlyCredit[] {
     const monthsData: { [key: string]: MonthlyCredit } = {};
-
+  
     users.forEach(user => {
       const issuanceDate = new Date(user.issuance_date);
       const monthKey = `${issuanceDate.getMonth() + 1}-${issuanceDate.getFullYear()}`;
@@ -74,9 +81,17 @@ export class ShortInfoComponent implements OnInit, OnDestroy {
         monthsData[monthKey].totalReturnedCredits++;
       }
     });
-
+  
+    for (const key in monthsData) {
+      if (monthsData.hasOwnProperty(key)) {
+        const month = monthsData[key];
+        month.averageIssuedCredits = month.totalIssuedAmount / month.totalIssuedCredits;
+      }
+    }
+  
     return Object.values(monthsData);
   }
+  
 
   ngOnDestroy(): void {
     this.onDestroy$.next();
