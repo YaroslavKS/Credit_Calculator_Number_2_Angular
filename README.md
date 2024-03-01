@@ -1,6 +1,6 @@
 Angular CLI version 17.2.0.
 
-Для запуску проекта на локалці, завантажуєте його (гілку master) і силка: https://github.com/YaroslavKS/Credit_Calculator_Number_2_Angular, встановлюєте всі залежності і потім пишете "ng serve" і проект запущено, або користуйтеся GitHubPages (https://github.com/YaroslavKS/Angular_Credit_App) і сама силка: https://yaroslavks.github.io/Angular_Credit_App/.
+Для запуску проекта на локалці, завантажуєте його (гілку master) і силка: https://github.com/YaroslavKS/Credit_Calculator_Number_2_Angular, встановлюєте всі залежності і потім пишете "ng serve" і проект запущено, або користуйтеся (СТАРІШОЮ ВЕРСІЄЮ!) на GitHubPages (https://github.com/YaroslavKS/Angular_Credit_App) і сама силка: https://yaroslavks.github.io/Angular_Credit_App/.
 
 Що було зроблено:
 
