@@ -10,7 +10,6 @@ export const routes: Routes = [
     { path: "short-info", component: ShortInfoComponent } 
 ];
 
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

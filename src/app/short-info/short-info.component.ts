@@ -3,7 +3,7 @@ import { DataService } from '../services/data.service';
 import { takeUntil } from 'rxjs/operators';
 import { User } from '../model/user.model';
 import { Subject } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 interface MonthlyCredit {
   month: string;
@@ -17,16 +17,16 @@ interface MonthlyCredit {
 
 @Component({
   selector: 'app-short-info',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './short-info.component.html',
   styleUrls: ['./short-info.component.scss'],
-  providers: [DatePipe]
 })
 export class ShortInfoComponent implements OnInit, OnDestroy {
   monthlyCredits: MonthlyCredit[] = [];
   private onDestroy$: Subject<void> = new Subject<void>();
-  users: User[] = [];
 
-  constructor(private dataService: DataService, private datePipe: DatePipe) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
     this.getData();
@@ -35,33 +35,27 @@ export class ShortInfoComponent implements OnInit, OnDestroy {
   getData(): void {
     this.dataService.getUsers()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe((users: User[]) => {
-        // Отримання даних користувачів
-        this.users = users;
-  
-        // Розрахунок метрик за користувачів
-        this.monthlyCredits = this.calculateMetrics(users); // Передаємо users у метод calculateMetrics
+      .subscribe({
+        next: (users: User[]) => {
+          this.monthlyCredits = this.calculateMetrics(users);
+        },
+        error: (error) => {
+          console.error('Error fetching data:', error);
+        }
       });
   }
-  
 
   sortData(property: string): void {
     if (property === 'month') {
-      this.monthlyCredits.sort((a, b) => {
-        const monthA = new Date(a.month).getTime();
-        const monthB = new Date(b.month).getTime();
-        return monthA - monthB;
-      });
-     } else {
-       this.monthlyCredits.sort((a, b) => {
-         return Number(a[property]) - Number(b[property]);
-     });
+      this.monthlyCredits.sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime());
+    } else {
+      this.monthlyCredits.sort((a, b) => Number(a[property]) - Number(b[property]));
     }
   }
 
   calculateMetrics(users: User[]): MonthlyCredit[] {
-    const monthsData: { [key: string]: MonthlyCredit } = {};
-  
+    const monthsData: Record<string, MonthlyCredit> = {};
+
     users.forEach(user => {
       const issuanceDate = new Date(user.issuance_date);
       const monthKey = `${issuanceDate.getMonth() + 1}-${issuanceDate.getFullYear()}`;
@@ -83,17 +77,13 @@ export class ShortInfoComponent implements OnInit, OnDestroy {
         monthsData[monthKey].totalReturnedCredits++;
       }
     });
-  
-    for (const key in monthsData) {
-      if (monthsData.hasOwnProperty(key)) {
-        const month = monthsData[key];
-        month.averageIssuedCredits = month.totalIssuedAmount / month.totalIssuedCredits;
-      }
-    }
-  
-    return Object.values(monthsData);
+
+    Object.values(monthsData).forEach(month => {
+      month.averageIssuedCredits = month.totalIssuedAmount / month.totalIssuedCredits;
+    });
+
+    return Object.values(monthsData) as MonthlyCredit[];
   }
-  
 
   ngOnDestroy(): void {
     this.onDestroy$.next();

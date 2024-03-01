@@ -2,18 +2,20 @@
   <div class="panel-heading bg-primary text-white">Metrics</div>
   <div class="panel-body">
     <div class="row">
-      <div class="col-md-6" *ngFor="let month of monthlyCredits | orderBy: sortBy:sortDirection">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h4 class="card-title" (click)="sortData('month')">Month: {{ month.month }}</h4>
-            <p class="card-text" (click)="sortData('totalIssuedCredits')">Total Issued Credits: {{ month.totalIssuedCredits }}</p>
-            <p class="card-text" (click)="sortData('averageIssuedCredits')">Average Issued Credits: {{ month.averageIssuedCredits }}</p>
-            <p class="card-text" (click)="sortData('totalIssuedAmount')">Total Issued Amount: {{ month.totalIssuedAmount }}</p>
-            <p class="card-text" (click)="sortData('totalInterestAccrued')">Total Interest Accrued: {{ month.totalInterestAccrued }}</p>
-            <p class="card-text" (click)="sortData('totalReturnedCredits')">Total Returned Credits: {{ month.totalReturnedCredits }}</p>
+      <ng-container *ngFor="let month of monthlyCredits">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h4 class="card-title">Month: {{ month.month }}</h4>
+              <p class="card-text">Total Issued Credits: {{ month.totalIssuedCredits }}</p>
+              <p class="card-text">Average Issued Credits: {{ month.averageIssuedCredits }}</p>
+              <p class="card-text">Total Issued Amount: {{ month.totalIssuedAmount }}</p>
+              <p class="card-text">Total Interest Accrued: {{ month.totalInterestAccrued }}</p>
+              <p class="card-text">Total Returned Credits: {{ month.totalReturnedCredits }}</p>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </div>

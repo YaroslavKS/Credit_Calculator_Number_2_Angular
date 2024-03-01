@@ -1,36 +1,45 @@
 <div class="table-wrapper">
   <div class="container">
-    <div class="form-row">
-      <div class="form-group col-md-4">
-        <label for="issuanceStartDate">Filter by Issuance Start Date:</label>
+    <div class="row">
+      <!-- Issuance Date Filters -->
+      <div class="col-md-3">
+        <label for="issuanceStartDate">Issuance Start Date:</label>
         <input type="date" class="form-control" id="issuanceStartDate" [(ngModel)]="issuanceStartDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
-        <label for="issuanceEndDate">Filter by Issuance End Date:</label>
+      <div class="col-md-3">
+        <label for="issuanceEndDate">Issuance End Date:</label>
         <input type="date" class="form-control" id="issuanceEndDate" [(ngModel)]="issuanceEndDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
-        <label for="returnStartDate">Filter by Return Start Date:</label>
+
+      <!-- Return Date Filters -->
+      <div class="col-md-3">
+        <label for="returnStartDate">Return Start Date:</label>
         <input type="date" class="form-control" id="returnStartDate" [(ngModel)]="returnStartDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
-        <label for="returnEndDate">Filter by Return End Date:</label>
+      <div class="col-md-3">
+        <label for="returnEndDate">Return End Date:</label>
         <input type="date" class="form-control" id="returnEndDate" [(ngModel)]="returnEndDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
-        <label for="actualReturnStartDate">Filter by Actual Return Start Date:</label>
+    </div>
+    <div class="row">
+      <!-- Actual Return Date Filters -->
+      <div class="col-md-3">
+        <label for="actualReturnStartDate">Actual Return Start Date:</label>
         <input type="date" class="form-control" id="actualReturnStartDate" [(ngModel)]="actualReturnStartDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
-        <label for="actualReturnEndDate">Filter by Actual Return End Date:</label>
+      <div class="col-md-3">
+        <label for="actualReturnEndDate">Actual Return End Date:</label>
         <input type="date" class="form-control" id="actualReturnEndDate" [(ngModel)]="actualReturnEndDate" (input)="applyFilters()">
       </div>
-      <div class="form-group col-md-4">
+
+      <!-- Overdue Filter
+      <div class="col-md-3">
         <label for="includeOverdue">Include Overdue:</label>
-        <input type="checkbox" class="form-control" id="includeOverdue" [(ngModel)]="includeOverdue" (change)="applyFilters()">
-      </div>
+        <input type="checkbox" class="form-control" id="includeOverdue" [(ngModel)]="includeOverdue" (input)="applyFilters()">
+      </div> -->
     </div>
   </div>
+
   <table class="table">
     <thead>
       <tr class="table-header">

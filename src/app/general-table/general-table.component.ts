@@ -19,8 +19,8 @@ export class GeneralTableComponent implements OnInit {
   issuanceEndDate: string = '';
   returnStartDate: string = '';
   returnEndDate: string = '';
-  actualReturnStartDate: string = '';
-  actualReturnEndDate: string = '';
+  actualReturnStartDate: Date | null = null;
+  actualReturnEndDate: Date | null = null;  
   includeOverdue: boolean = false; // Опціональний фільтр для просрочених кредитів
 
   users: User[] = [];
@@ -55,28 +55,38 @@ export class GeneralTableComponent implements OnInit {
       let passReturnDateFilter = true;
       let passActualReturnDateFilter = true;
       let passOverdueFilter = true;
-
+      const today = new Date().toISOString().slice(0, 10); // Отримати сьогоднішню дату у форматі рядка YYYY-MM-DD
+  
       // Фільтр за періодом видачі кредиту
       if (this.issuanceStartDate && this.issuanceEndDate) {
         passIssuanceDateFilter = user.issuance_date >= this.issuanceStartDate && user.issuance_date <= this.issuanceEndDate;
       }
-
+  
       // Фільтр за періодом повернення кредиту
       if (this.returnStartDate && this.returnEndDate) {
         passReturnDateFilter = user.return_date >= this.returnStartDate && user.return_date <= this.returnEndDate;
       }
-
+  
       // Фільтр за періодом фактичного повернення кредиту
-      if (this.actualReturnStartDate && this.actualReturnEndDate) {
-        passActualReturnDateFilter = user.actual_return_date >= this.actualReturnStartDate && user.actual_return_date <= this.actualReturnEndDate;
+      if (this.actualReturnStartDate && this.actualReturnEndDate && user.actual_return_date) {
+        const startDate = new Date(this.actualReturnStartDate);
+        const endDate = new Date(this.actualReturnEndDate);
+        const userReturnDate = new Date(user.actual_return_date);
+        passActualReturnDateFilter = userReturnDate >= startDate && userReturnDate <= endDate;
       }
 
-      // Опціональний фільтр для просрочених кредитів
-      if (this.includeOverdue && user.actual_return_date && user.return_date) {
-        passOverdueFilter = new Date(user.actual_return_date) > new Date(user.return_date);
-      }
-
+      // // Опціональний фільтр для просрочених кредитів
+      // if (this.includeOverdue) {
+      //   if (user.actual_return_date && user.return_date) {
+      //     passOverdueFilter = new Date(user.actual_return_date) > new Date(user.return_date);
+      //   } else if (user.return_date) {
+      //     passOverdueFilter = new Date(user.return_date) < new Date();
+      //   }
+      // }
+  
       return passIssuanceDateFilter && passReturnDateFilter && passActualReturnDateFilter && passOverdueFilter;
     });
   }
+  
+  
 }
